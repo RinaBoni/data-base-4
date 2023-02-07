@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.3" use-changelog="false" last-position="0,0" last-zoom="1" max-obj-count="7"
+	 default-schema="public" default-owner="postgres">
+<database name="new_database" is-template="false" allow-conns="true">
+</database>
+
+<schema name="public" layer="0" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<schema name="ord" layer="0" fill-color="#e1e1e1">
+	<role name="postgres"/>
+</schema>
+
+<table name="delivery" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="920" y="660"/>
+	<column name="delivery_id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="delivery_type" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="delivery_price" not-null="true">
+		<type name="money" length="0"/>
+	</column>
+	<column name="delivery_time" not-null="true">
+		<type name="interval" length="0"/>
+	</column>
+	<constraint name="delivery_pk" type="pk-constr" table="public.delivery">
+		<columns names="delivery_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="product" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="100" y="460"/>
+	<column name="product_id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="product_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="product_price" not-null="true">
+		<type name="money" length="0"/>
+	</column>
+	<column name="product_info" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="product_pk" type="pk-constr" table="public.product">
+		<columns names="product_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="client" layer="0" collapse-mode="2" max-obj-count="6" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="280" y="80"/>
+	<column name="client_id" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="company_name" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="address" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<column name="number" not-null="true">
+		<type name="numeric" length="11" precision="0"/>
+	</column>
+	<column name="contact_person" not-null="true">
+		<type name="text" length="0"/>
+	</column>
+	<constraint name="client_pk" type="pk-constr" table="public.client">
+		<columns names="client_id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="contract" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<position x="780" y="60"/>
+	<column name="contract_number" not-null="true"
+	 identity-type="ALWAYS">
+		<type name="smallint" length="0"/>
+	</column>
+	<column name="date_of_ purchase" not-null="true">
+		<type name="date" length="0"/>
+	</column>
+	<constraint name="contract_pk" type="pk-constr" table="public.contract">
+		<columns names="contract_number" ref-type="src-columns"/>
+	</constraint>
+
+	<customidxs object-type="column">
+		<object name="client_id_client" index="2"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="client_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="client_has_many_contract" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#ea8315"
+	 src-table="public.client"
+	 dst-table="public.contract"
+	 src-required="false" dst-required="false"/>
+
+<table name="many_product_has_many_contract" layer="0" collapse-mode="2" max-obj-count="4" z-value="0">
+	<schema name="public"/>
+	<position x="640" y="340"/>
+	<column name="product_quantity" not-null="true">
+		<type name="smallint" length="0"/>
+	</column>
+
+	<customidxs object-type="column">
+		<object name="contract_number_contract" index="1"/>
+		<object name="delivery_id_delivery" index="2"/>
+		<object name="product_id_product" index="0"/>
+	</customidxs>
+
+	<customidxs object-type="constraint">
+		<object name="contract_fk" index="2"/>
+		<object name="delivery_fk" index="3"/>
+		<object name="many_product_has_many_contract_pk" index="0"/>
+		<object name="product_fk" index="1"/>
+	</customidxs>
+</table>
+
+<relationship name="product_has_many_many_product_has_many_contract" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.product"
+	 dst-table="public.many_product_has_many_contract"
+	 src-required="true" dst-required="false"
+	 identifier="true"
+>
+	<label ref-type="name-label">
+		<position x="-9.29238" y="-7.00908"/>
+	</label>
+</relationship>
+
+<relationship name="contract_has_many_many_product_has_many_contract" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.contract"
+	 dst-table="public.many_product_has_many_contract"
+	 src-required="true" dst-required="false"
+	 identifier="true"
+>
+	<label ref-type="name-label">
+		<position x="1.26689" y="3.06774"/>
+	</label>
+</relationship>
+
+<table name="many_product_has_many_delivery" layer="0" collapse-mode="2" max-obj-count="3" z-value="0">
+	<schema name="public"/>
+	<position x="180" y="760"/>
+</table>
+
+<relationship name="product_has_many_many_product_has_many_delivery" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.product"
+	 dst-table="public.many_product_has_many_delivery"
+	 src-required="true" dst-required="false"
+	 identifier="true"
+/>
+
+<relationship name="delivery_has_many_many_product_has_many_delivery" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 src-table="public.delivery"
+	 dst-table="public.many_product_has_many_delivery"
+	 src-required="true" dst-required="false"
+	 identifier="true"
+/>
+
+<relationship name="delivery_has_many_many_product_has_many_contract" type="rel1n" layer="0"
+	 src-col-pattern="{sc}_{st}"
+	 pk-pattern="{dt}_pk" uq-pattern="{dt}_uq"
+	 src-fk-pattern="{st}_fk"
+	 custom-color="#e58fc6"
+	 src-table="public.delivery"
+	 dst-table="public.many_product_has_many_contract"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
